@@ -1,0 +1,1 @@
+// GANTT final, captures d’écran outils collaboratifs utilisés, synthèse personnelle de chaque membre sur travail précis réalisé, problèmes rencontrés, solutions proposées, et une conclusion sur degré de satisfaction du cahier des charges

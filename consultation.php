@@ -1,0 +1,1 @@
+// accessible à tous qui affiche la dernière mesure de toutes les salles.
