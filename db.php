@@ -1,8 +1,8 @@
 <?php
-$host = "";   // A remplir
-$user = "";   // A remplir
-$pass = "";   // A remplir
-$dbname = ""; // A remplir
+$host = "192.168.102.140";   // A remplir
+$user = "sae23";   // A remplir
+$pass = "sae23";   // A remplir
+$dbname = "SAE23"; // A remplir
 
 $connexion = mysqli_connect($host, $user, $pass, $dbname);
 

@@ -28,31 +28,42 @@
             <h2>Les bâtiments et les salles équipées</h2>
             <?php
             require_once("db.php");
-            $sql_build = "SELECT DISTINCT id_bat FROM salles";
-            $result_build = mysqli_query($connexion, $sql_build);
-            if ($result_build && mysqli_num_rows($result_build) > 0) {
-                echo "<ul>";
-                while ($row = mysqli_fetch_assoc($result_build)) {
+
+            $sql = "SELECT s.id_bat, s.salle
+                    FROM salles s
+                    ORDER BY s.id_bat, s.salle";
+
+            $result = mysqli_query($connexion, $sql);
+
+            if ($result && mysqli_num_rows($result) > 0) {
+                $data = [];
+
+                while ($row = mysqli_fetch_assoc($result)) {
                     $id_build = $row['id_bat'];
+                    $salle = $row['salle'];
 
-                    echo "<li><strong>Bâtiment :</strong> $id_build</li>";
+                    if (!isset($data[$id_build])) {
+                        $data[$id_build] = [];
+                    }
+                    $data[$id_build][] = $salle;
+                }
+
+                echo "<ul>";
+                foreach ($data as $id_build => $salles) {
+                    echo "<li><strong>Bâtiment :</strong> " . $id_build . "</li>";
                     
-                    $sql_room = "SELECT DISTINCT salle FROM salles WHERE id_bat = '$id_build'";
-                    $result_room = mysqli_query($connexion, $sql_room);
-
-                    if ($result_room && mysqli_num_rows($result_room) > 0) {
+                    if (!empty($salles)) {
                         echo "<ul>";
-                        while ($row_salle = mysqli_fetch_assoc($result_room)) {
-                            $salle = $row_salle['salle'];
-                            echo "<li>Salle : $salle</li>";
+                        foreach ($salles as $salle) {
+                            echo "<li>Salle : " . $salle . "</li>";
                         }
                         echo "</ul>";
                     } else {
                         echo "<ul><li>Aucune salle équipée dans ce bâtiment.</li></ul>";
                     }
-
                 }
                 echo "</ul>";
+
             } else {
                 echo "<p>Aucun bâtiment équipé trouvé.</p>";
             }
