@@ -1,5 +1,5 @@
 <?php
-$host = "192.168.102.140";   // A remplir
+$host = "localhost";   // A remplir
 $user = "sae23";   // A remplir
 $pass = "sae23";   // A remplir
 $dbname = "SAE23"; // A remplir
