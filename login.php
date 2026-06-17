@@ -1,3 +1,4 @@
+<!-- test -->
 <?php
 session_start();
 require_once("db.php");
@@ -48,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         
         <form action="login.php" method="POST">
-            <input type="hidden" name="redirect_to" value="<?php echo htmlspecialchars($redirect_to); ?>">
+            <input type="hidden" name="redirect_to" value="<?php echo htmlspecialchars($redirect_to); ?>"> <!-- Pour garder la variable quand on rafraichi la page -->
 
             <p>
                 <label>Utilisateur :</label><br>
