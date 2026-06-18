@@ -1,3 +1,5 @@
+<!-- accessible uniquement par l’Administrateur du site (login/mdp). Ajout/suppression de bâtiments, salles et capteurs.-->
+<!-- Si utilisaeur non connecté/non role admin, redirection vers login.php avec paramètre redirect=administration.php -->
 <?php
 session_start();
 

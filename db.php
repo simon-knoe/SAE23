@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";   // A remplir
-$user = "sae23";   // A remplir
-$pass = "sae23";   // A remplir
-$dbname = "SAE23"; // A remplir
+$host = "localhost";
+$user = "sae23";
+$pass = "sae23";
+$dbname = "SAE23";
 
 $connexion = mysqli_connect($host, $user, $pass, $dbname);
 
