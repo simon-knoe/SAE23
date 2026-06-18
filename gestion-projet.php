@@ -39,7 +39,7 @@
             </ul>
         </article>
         <article>
-            <h2>Conclusion sur le degré de satisfaction du cahier des charges</h2>
+            <h2>Conclusion : </h2>
             <p>Lore ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </article>
     </body>

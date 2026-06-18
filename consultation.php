@@ -40,7 +40,6 @@
                 $result = mysqli_query($connexion, $sql);
 
                 if ($result && mysqli_num_rows($result) > 0) {
-                    // 2. DATA STRUCTURING
                     $data = [];
                     while ($row = mysqli_fetch_assoc($result)) {
                         $b = $row['id_bat'];
@@ -55,7 +54,6 @@
                         }
                         
                         if ($c !== null) {
-                            // Store the sensor name along with its last measurement details
                             $data[$b][$s][] = [
                                 'nom'     => $c,
                                 'valeur'  => $row['valeur'],
@@ -66,7 +64,6 @@
                         }
                     }
 
-                    // 3. HTML RENDER
                     echo "<ul>";
                     foreach ($data as $id_build => $salles) {
                         echo "<li><strong>Bâtiment :</strong> " . $id_build . "</li>";

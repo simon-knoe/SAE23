@@ -5,7 +5,7 @@ require_once("db.php");
 
 $error_message = "";
 
-// Redirection after login
+// Redirection after login if not specified redirect to index.php
 $redirect_to = isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -45,12 +45,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Connexion</h2>
         
         <?php if (!empty($error_message)): ?>
-            <p style="color: red;"><?php echo htmlspecialchars($error_message); ?></p>
+            <p style="color: red;"><?php echo $error_message; ?></p>
         <?php endif; ?>
         
         <form action="login.php" method="POST">
-            <input type="hidden" name="redirect_to" value="<?php echo htmlspecialchars($redirect_to); ?>"> <!-- Pour garder la variable quand on rafraichi la page -->
-
+            <input type="hidden" name="redirect_to" value="<?php echo $redirect_to; ?>"> <!-- Pour garder la variable quand on rafraichi la page -->
             <p>
                 <label>Utilisateur :</label><br>
                 <input type="text" name="username" required>
