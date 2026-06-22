@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_delete_salle']
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_delete_capteur'])) {
     $capteur_del = $_POST['capteur_delete'];
     if (!empty($capteur_del)) {
-        $sql = "DELETE FROM meusures WHERE capteur = '$capteur_del';
+        $sql = "DELETE FROM meusures WHERE capteur = '$capteur_del'
                 DELETE FROM capteurs WHERE capteur = '$capteur_del'";
         if (mysqli_query($connexion, $sql)) {
             $msg_capteur = "<p>Capteur $capteur_del supprimé avec succès !</p>";
