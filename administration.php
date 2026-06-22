@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_create_capteur
     if (empty($salle) || empty($capt_type)) {
         $msg_capteur = "<p>Tous les champs sont obligatoires.</p>";
     } else {
-        $nom_capteur = substr($capt_type, 0, 4) . "_" . $salle;
+        $nom_capteur = "AM107_" . substr($capt_type, 0, 4) . "_" . $salle;
 
         $sql = "INSERT INTO capteurs (capteur, capt_type, unite, salle) 
                 VALUES ('$nom_capteur', '$capt_type', '$unite', '$salle')";
