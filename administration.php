@@ -1,5 +1,5 @@
-<!-- accessible uniquement par l’Administrateur du site (login/mdp). Ajout/suppression de bâtiments, salles et capteurs.-->
-<!-- Si utilisaeur non connecté/non role admin, redirection vers login.php avec paramètre redirect=administration.php -->
+<!-- accessible only to Administrators (login/passwd). Add/suppress buildings, rooms and sensors.-->
+<!-- If not connected/not admin role User, redirection to login.php with parameter redirect=administration.php -->
 <?php
 session_start();
 

@@ -14,7 +14,7 @@ MQTT_PORT="8883"            # Port n°1883 to avoid TLS blocks
 
 export MYSQL_PWD="$DB_PASS"
 
-echo "=== DÉMARRAGE DE LA COLLECTE AUTOMATIQUE (Toutes les 2 min) ==="
+echo "DÉMARRAGE DE LA COLLECTE AUTOMATIQUE (Toutes les 2 min)"
 
 
 while true
