@@ -1,5 +1,5 @@
-<!-- accessible uniquement par l’Administrateur du site (login/mdp). Ajout/suppression de bâtiments, salles et capteurs.-->
-<!-- Si utilisaeur non connecté/non role admin, redirection vers login.php avec paramètre redirect=administration.php -->
+<!-- accessible only to Administrators (login/passwd). Add/suppress buildings, rooms and sensors.-->
+<!-- If not connected/not admin role User, redirection to login.php with parameter redirect=administration.php -->
 <?php
 session_start();
 
@@ -263,10 +263,10 @@ $result_list_capteurs = mysqli_query($connexion, "SELECT capteur, salle FROM cap
 
                     <label for="capt_type">Type de capteur :</label>
                     <select id="capt_type" name="capt_type" required>
-                        <option value="Temperature">Temperature</option>
-                        <option value="Humidite">Humidite</option>
-                        <option value="CO2">CO2</option>
-                        <option value="Luminosite">Luminosite</option>
+                        <option value="temperature">Temperature</option>
+                        <option value="humidite">Humidite</option>
+                        <option value="co2">CO2</option>
+                        <option value="luminosite">Luminosite</option>
                     </select>
 
                     <label for="salle_select">Placer dans la salle : </label>
