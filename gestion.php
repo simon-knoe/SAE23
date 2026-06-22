@@ -51,8 +51,6 @@ $sql = "SELECT
 
 $result = mysqli_query($connexion, $sql);
 echo $result
-=======
->>>>>>> 793292f6ef2658c52e1985b65dc95028c24b4b90
 ?>
 <!DOCTYPE html>
 <html>
