@@ -34,7 +34,7 @@
             <p>Chaque membre de l’équipe a rédigé une synthèse personnelle sur le travail qu’il a réalisé, les problèmes rencontrés et les solutions proposées. Voici un résumé des contributions de chaque membre :</p>
             <ul>
                 <li>DEPOSIER Lilian : </li>
-                <li>KNODLSEDER Simon : </li>
+                <li>KNODLSEDER Simon : Dans la SAÉ 23, j'ai créé un site web avec des scripts PHP et des requêtes SQL pour gérer un réseau de capteurs, avec des fonctionnalités d'ajout, de suppression et un tableau de bord statistique (valeurs actuelles, minimum, maximum et moyenne). J'ai rencontré pas mal de difficultés avec la machine virtuelle lors des phases de test, notamment pour la lancer depuis mon PC donc j’ai du laisser le test a d’autres membres de mon équipe. </li>
                 <li>VILAS-SAYSSAC Gabin : Mon travail s'est articulé autour de plusieurs axes. J'ai d'abord géré le développement web en créant l'architecture d'un site dynamique à l'aide de scripts Bash (header.sh, index.sh, footer.sh, web.sh) qui génèrent automatiquement la structure HTML pour afficher les données des capteurs (abandonné par la suite). Ensuite, j'ai assuré l'administration de la base de données MySQL en concevant et modifiant le schéma relationnel sur le serveur LAMPP, notamment en restructurant certaines tables via des requêtes SQL. En parallèle, j'ai pris en charge la gestion du versioning en initialisant le dépôt Git local et distant(changé par la suite), assurant ainsi la synchronisation entre mon environnement de développement sous Windows, la machine virtuelle Lubuntu et le dépôt GitHub partagé.</li>
             </ul>
         </article>
