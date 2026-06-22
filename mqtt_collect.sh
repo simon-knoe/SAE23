@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# --- CONFIGURATION BDD LAMPP ---
+# DB CONFIGURATION
 MYSQL_BIN="/opt/lampp/bin/mysql"
 DB_USER="sae23"
 DB_PASS="sae23" 
 DB_NAME="SAE23"
 
-# --- CONFIGURATION MQTT ---
+#  MQTT CONFIGURATION
 MQTT_USER="student"
 MQTT_PASS="student"
 MQTT_HOST="mqtt.iut-blagnac.fr"
-MQTT_PORT="8883"            # Port 1883 pour éviter les blocages TLS
+MQTT_PORT="8883"            # Port n°1883 to avoid TLS blocks
 
 export MYSQL_PWD="$DB_PASS"
 
-echo "=== DÉMARRAGE DE LA COLLECTE AUTOMATIQUE (Toutes les 2 min) ==="
+echo "DÉMARRAGE DE LA COLLECTE AUTOMATIQUE (Toutes les 2 min)"
 
 
 while true
@@ -34,8 +34,9 @@ do
         DATE_ACTUELLE=$(date +%Y-%m-%d)
         HEURE_ACTUELLE=$(date +%H:%M:%S)
 
-        PAYLOAD=$(mosquitto_sub -h $MQTT_HOST -p $MQTT_PORT -u $MQTT_USER -P $MQTT_PASS -t "$TOPIC_SALLE" -C 1 -W 5 2>/dev/null)
-
+        PAYLOAD=$(mosquitto_sub -h $MQTT_HOST -p $MQTT_PORT -u $MQTT_USER -P $MQTT_PASS -t "$TOPIC_SALLE" -C 1 -W 5)
+		echo "   [DEBUG] Trame MQTT : $PAYLOAD"
+        echo "   [DEBUG] Capteurs autorisés BDD : $CAPTEURS_SALLE"
         if [ "$PAYLOAD" != "" ]; then
             
             TEMP=$(echo "$PAYLOAD" | jq -r '.[0].temperature // ""')
@@ -57,10 +58,10 @@ do
                 fi
             }
 
-            inserer_si_autorise "temperature" "$TEMP"  "AM107_${SALLE_COURANTE}_Temp"
-            inserer_si_autorise "humidite"    "$HUM"   "AM107_${SALLE_COURANTE}_Hum"
-            inserer_si_autorise "co2"         "$CO2"   "AM107_${SALLE_COURANTE}_CO2"
-            inserer_si_autorise "luminosite"  "$LUM"   "AM107_${SALLE_COURANTE}_Lum"
+            inserer_si_autorise "temperature" "$TEMP"  "AM107_Temp_${SALLE_COURANTE}"
+            inserer_si_autorise "humidite"    "$HUM"   "AM107_Humi_${SALLE_COURANTE}"
+            inserer_si_autorise "co2"         "$CO2"   "AM107_CO2_${SALLE_COURANTE}"
+            inserer_si_autorise "luminosite"  "$LUM"   "AM107_Lumi_${SALLE_COURANTE}"
 
         fi
     done
