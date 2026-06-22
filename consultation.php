@@ -1,4 +1,21 @@
 <!-- accessible à tous qui affiche la dernière mesure de toutes les salles. -->
+<?php
+// Connexion à la base de données de ton LAMPP
+require_once("db.php");
+
+// Requête SQL optimisée pour récupérer la TOUTE DERNIÈRE mesure de chaque capteur avec ses infos
+$sql = "SELECT m.capteur, m.date, m.horaire, m.valeur, c.salle, c.capt_type, c.unite 
+        FROM mesures m
+        INNER JOIN (
+            SELECT capteur, MAX(CONCAT(date, ' ', horaire)) AS max_datetime
+            FROM mesures
+            GROUP BY capteur
+        ) latest ON m.capteur = latest.capteur AND CONCAT(m.date, ' ', m.horaire) = latest.max_datetime
+        LEFT JOIN capteurs c ON m.capteur = c.capteur
+        ORDER BY c.salle, c.capt_type";
+
+$result = mysqli_query($connexion, $sql);
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,108 +23,64 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="styles/styles.css">
     </head>
-    <header>
-        <h1>Page de consultation</h1>
-        <nav>
-            <ul>
-                <li><a href="index.php">Accueil</a></li>
-                <li><a href="consultation.php" class="active">Consultation des données</a></li>
-                <li><a href="gestion.php">Gestion</a></li>
-                <li><a href="administration.php">Administration</a></li>
-                <li><a href="gestion-projet.php">Gestion de projet</a></li>
-            </ul>
-        </nav>
-    </header>
     <body>
-        <article>
-            <h2>Bienvenue sur la page de consultation</h2>
-            <p>Trouvez ci dessous les dernières données de tout les capteurs du site : </p>
-            <?php
-                require_once("db.php");
+        <header>
+            <h1>Page de consultation</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="consultation.php" class="active">Consultation des données</a></li>
+                    <li><a href="gestion.php">Gestion</a></li>
+                    <li><a href="administration.php">Administration</a></li>
+                    <li><a href="gestion-projet.php">Gestion de projet</a></li>
+                </ul>
+            </nav>
+        </header>
 
-                $sql = "SELECT s.id_bat, s.salle, c.capteur, m.valeur, m.unite, m.date, m.horaire
-                        FROM salles s
-                        LEFT JOIN capteurs c ON s.salle = c.salle
-                        LEFT JOIN mesures m ON c.capteur = m.capteur AND m.id_mesure = (
-                            SELECT m2.id_mesure 
-                            FROM mesures m2 
-                            WHERE m2.capteur = c.capteur 
-                            ORDER BY m2.date DESC, m2.horaire DESC 
-                            LIMIT 1
-                        )
-                        ORDER BY s.id_bat, s.salle, c.capteur";
-
-                $result = mysqli_query($connexion, $sql);
-
-                if ($result && mysqli_num_rows($result) > 0) {
-                    $data = [];
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $b = $row['id_bat'];
-                        $s = $row['salle'];
-                        $c = $row['capteur'];
-                        
-                        if (!isset($data[$b])) {
-                            $data[$b] = [];
-                        }
-                        if (!isset($data[$b][$s])) {
-                            $data[$b][$s] = [];
-                        }
-                        
-                        if ($c !== null) {
-                            $data[$b][$s][] = [
-                                'nom'     => $c,
-                                'valeur'  => $row['valeur'],
-                                'unite'   => $row['unite'],
-                                'date'    => $row['date'],
-                                'horaire' => $row['horaire']
-                            ];
-                        }
-                    }
-
-                    echo "<ul>";
-                    foreach ($data as $id_build => $salles) {
-                        echo "<li><strong>Bâtiment :</strong> " . $id_build . "</li>";
-                        
-                        if (!empty($salles)) {
-                            echo "<ul>";
-                            foreach ($salles as $salle => $capteurs) {
-                                echo "<li>Salle : " . $salle . "</li>";
+        <main>
+            <article>
+                <h2>Bienvenue sur la page de consultation</h2>
+                <p>Trouvez ci-dessous les dernières données de tous les capteurs du site :</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Salle</th>
+                            <th>Type de Capteur</th>
+                            <th>Dernière Valeur</th>
+                            <th>Date & Heure de capture</th>
+                            <th>ID Capteur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Vérification et boucle d'affichage des lignes de données
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                // Formatage de la date en version française (JJ/MM/AAAA)
+                                $date_fr = date("d/m/Y", strtotime($row['date']));
+                                $heure_fr = $row['horaire'];
                                 
-                                echo "<ul>";
-                                if (!empty($capteurs)) {
-                                    foreach ($capteurs as $capteurData) {
-                                        $nom_capteur = $capteurData['nom'];
-                                        
-                                        // Check if a measurement exists for this sensor
-                                        if ($capteurData['valeur'] !== null) {
-                                            $valeur  = $capteurData['valeur'];
-                                            $unite   = $capteurData['unite'];
-                                            $date    = $capteurData['date'];
-                                            
-                                            // Format the time to show only hours and minutes (HH:mm)
-                                            $heure_formattee = date('H:i', strtotime($capteurData['horaire']));
+                                // Gestion des valeurs par défaut si le capteur n'est pas encore lié proprement
+                                $salle = !empty($row['salle']) ? $row['salle'] : "Inconnue";
+                                $type = !empty($row['capt_type']) ? ucfirst($row['capt_type']) : "Inconnu";
+                                $unite = !empty($row['unite']) ? $row['unite'] : "";
 
-                                            echo "<li>$nom_capteur — <em>Dernière mesure : $valeur $unite (le $date à $heure_formattee)</em></li>";
-                                        } else {
-                                            echo "<li>$nom_capteur — <em>Aucune mesure enregistrée</em></li>";
-                                        }
-                                    }
-                                } else {
-                                    echo "<li>Aucun capteur équipé dans cette salle.</li>";
-                                }
-                                echo "</ul>";
+                                echo "<tr>";
+                                    echo "<td><strong>" . htmlspecialchars($salle) . "</strong></td>";
+                                    echo "<td>" . htmlspecialchars($type) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['valeur']) . " " . htmlspecialchars($unite) . "</td>";
+                                    echo "<td class='date-time'>Le " . $date_fr . " à " . $heure_fr . "</td>";
+                                    echo "<td><code>" . htmlspecialchars($row['capteur']) . "</code></td>";
+                                echo "</tr>";
                             }
-                            echo "</ul>";
                         } else {
-                            echo "<ul><li>Aucune salle équipée dans ce bâtiment.</li></ul>";
+                            echo "<tr><td colspan='5' style='text-align:center; padding:20px;'>Aucune mesure n'a encore été enregistrée dans la base de données.</td></tr>";
                         }
-                    }
-                    echo "</ul>";
-
-                } else {
-                    echo "<p>Aucun bâtiment équipé trouvé.</p>";
-                }
-            ?>
-        </article>
+                        ?>
+                    </tbody>
+                </table>
+            </article>
+        </main>
     </body>
 </html>
