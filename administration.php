@@ -106,15 +106,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_delete_salle']
 
 // del sensor
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_delete_capteur'])) {
-    $capteur_del = $_POST['capteur_delete'];
+    $capteur_del = mysqli_real_escape_string($connexion, $_POST['capteur_delete']);
+    
     if (!empty($capteur_del)) {
-        $sql = "DELETE FROM meusures WHERE capteur = '$capteur_del'
-                DELETE FROM capteurs WHERE capteur = '$capteur_del'";
-        if (mysqli_query($connexion, $sql)) {
-            $msg_capteur = "<p>Capteur $capteur_del supprimé avec succès !</p>";
+        $sql_mesures = "DELETE FROM mesures WHERE capteur = '$capteur_del'";
+        mysqli_query($connexion, $sql_mesures);
+        $sql_capteur = "DELETE FROM capteurs WHERE capteur = '$capteur_del'";
+        if (mysqli_query($connexion, $sql_capteur)) {
+            $msg_capteur = "<p>Capteur " . $capteur_del . " et toutes ses mesures ont été supprimés avec succès !</p>";
         } else {
-            $msg_capteur = "<p>Impossible de supprimer : des mesures y sont peut-être associées.</p>";
+            $msg_capteur = "<p>Erreur lors de la suppression du capteur de la base de données.</p>";
         }
+    } else {
+        $msg_capteur = "<p>Veuillez sélectionner un capteur à supprimer.</p>";
     }
 }
 
