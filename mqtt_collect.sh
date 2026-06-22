@@ -37,8 +37,8 @@ do
         VAL_TEMP=$(echo "$DONNEES_JSON" | jq -r '.[0].temperature')
         if [ "$VAL_TEMP" != "null" ] && [ -n "$VAL_TEMP" ]; then
             NOM_CAPTEUR="AM107_${SALLE}_Temp"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', '°C', '$SALLE', 'temperature');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_TEMP, '$NOM_CAPTEUR');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', '°C', '$SALLE', 'temperature');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_TEMP, '$NOM_CAPTEUR');"
         fi
 
 
@@ -47,8 +47,8 @@ do
         VAL_PRESS=$(echo "$DONNEES_JSON" | jq -r '.[0].pressure')
         if [ "$VAL_PRESS" != "null" ] && [ -n "$VAL_PRESS" ]; then
             NOM_CAPTEUR="AM107_${SALLE}_Press"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'hPa', '$SALLE', 'pression');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_PRESS, '$NOM_CAPTEUR');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'hPa', '$SALLE', 'pression');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_PRESS, '$NOM_CAPTEUR');"
         fi
 
 
@@ -57,8 +57,8 @@ do
         VAL_CO2=$(echo "$DONNEES_JSON" | jq -r '.[0].co2')
         if [ "$VAL_CO2" != "null" ] && [ -n "$VAL_CO2" ]; then
             NOM_CAPTEUR="AM107_${SALLE}_CO2"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'ppm', '$SALLE', 'co2');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_CO2, '$NOM_CAPTEUR');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'ppm', '$SALLE', 'co2');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_CO2, '$NOM_CAPTEUR');"
         fi
 
 
@@ -67,8 +67,8 @@ do
         VAL_LUM=$(echo "$DONNEES_JSON" | jq -r '.[0].illumination')
         if [ "$VAL_LUM" != "null" ] && [ -n "$VAL_LUM" ]; then
             NOM_CAPTEUR="AM107_${SALLE}_Lum"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'lux', '$SALLE', 'luminosite');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_LUM, '$NOM_CAPTEUR');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'lux', '$SALLE', 'luminosite');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_LUM, '$NOM_CAPTEUR');"
         fi
 
 
@@ -77,8 +77,8 @@ do
         VAL_HUM=$(echo "$DONNEES_JSON" | jq -r '.[0].humidity')
         if [ "$VAL_HUM" != "null" ] && [ -n "$VAL_HUM" ]; then
             NOM_CAPTEUR="AM107_${SALLE}_Hum"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', '%', '$SALLE', 'humidite');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_HUM, '$NOM_CAPTEUR');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', '%', '$SALLE', 'humidite');"
+            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_HUM, '$NOM_CAPTEUR');"
         fi
 
         echo "$(date '+%Y-%m-%d %H:%M:%S') - Données de la salle $SALLE insérées"
