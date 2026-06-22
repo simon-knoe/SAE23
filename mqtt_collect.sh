@@ -1,90 +1,75 @@
 #!/bin/bash
 
-
-# MQTT BROKER CONFIGURATION (TLS Insecure)
-
-BROKER_MQTT="mqtt.iut-blagnac.fr"
-PORT_MQTT="8883"
-UTILISATEUR_MQTT="student"
-MDP_MQTT="student"
-TOPIC_MQTT="sensors/AM107/by-room/+/data"
-
-
-# MYSQL CONFIGURATION
-
-UTILISATEUR_BDD="sae23"
-MDP_BDD="sae23"
-NOM_BDD="SAE23"
+# --- CONFIGURATION BDD LAMPP ---
 MYSQL_BIN="/opt/lampp/bin/mysql"
+DB_USER="sae23"
+DB_PASS="sae23" 
+DB_NAME="SAE23"
 
-while true
+# --- CONFIGURATION MQTT ---
+MQTT_USER="student"
+MQTT_PASS="student"
+MQTT_HOST="mqtt.iut-blagnac.fr"
+MQTT_PORT="8883"            
+
+export MYSQL_PWD="$DB_PASS"
+
+echo "=== LANCEMENT DE LA COLLECTE PAR SALLE (SANS UNITÉ) ==="
+
+# 1. Récupération de la liste des salles depuis la BDD
+mapfile -t LISTE_SALLES < <($MYSQL_BIN -u$DB_USER $DB_NAME -se "SELECT salle FROM salles ORDER BY salle")
+
+# 2. Boucle principale sur CHAQUE salle
+for SALLE_COURANTE in "${LISTE_SALLES[@]}"
 do
-  
-    # 1. LISTEN TO MQTT BROKER (TLS Insecure mode)
+    echo "🔎 Interrogation de la salle : $SALLE_COURANTE..."
 
-    SORTIE_BRUTE=$(mosquitto_sub -h "$BROKER_MQTT" -p "$PORT_MQTT" -u "$UTILISATEUR_MQTT" -P "$MDP_MQTT" -t "$TOPIC_MQTT" --insecure -v -C 1)
+    # Définition du topic exact pour cette salle
+    TOPIC_SALLE="sensors/AM107/by-room/${SALLE_COURANTE}/data"
 
-    if [ -n "$SORTIE_BRUTE" ]; then
-        TOPIC_RECU=$(echo "$SORTIE_BRUTE" | awk '{print $1}')
-        DONNEES_JSON=$(echo "$SORTIE_BRUTE" | cut -d' ' -f2-)
+    # 3. Récupération des types de capteurs configurés pour cette salle
+    CAPTEURS_SALLE=$($MYSQL_BIN -u$DB_USER $DB_NAME -se "SELECT capt_type FROM capteurs WHERE salle='$SALLE_COURANTE'")
+
+    # Horodatage pour l'insertion
+    DATE_ACTUELLE=$(date +%Y-%m-%d)
+    HEURE_ACTUELLE=$(date +%H:%M:%S)
+
+    # 4. ÉCOUTE UNIQUE : 1 message (-C 1) et limite de 5 secondes (-W 5)
+    PAYLOAD=$(mosquitto_sub -h $MQTT_HOST -p $MQTT_PORT -u $MQTT_USER -P $MQTT_PASS -t "$TOPIC_SALLE" -C 1 -W 5 2>/dev/null)
+
+    # Si la salle a répondu
+    if [ "$PAYLOAD" != "" ]; then
         
-        # Extract room name (4th part of the topic)
-        SALLE=$(echo "$TOPIC_RECU" | cut -d'/' -f4)
+        # Extraction des données du JSON
+        TEMP=$(echo "$PAYLOAD" | jq -r '.[0].temperature // ""')
+        HUM=$(echo "$PAYLOAD" | jq -r '.[0].humidity // ""')
+        CO2=$(echo "$PAYLOAD" | jq -r '.[0].co2 // ""')
+        LUM=$(echo "$PAYLOAD" | jq -r '.[0].illumination // ""')
 
+        # Fonction interne d'insertion (CORRIGÉE : sans la colonne unite)
+        inserer_si_autorise() {
+            local TYPE_DEMANDE="$1"
+            local VALEUR="$2"
+            local ID_CAPTEUR="$3"
 
-        # 2. PARAMETER 1: TEMPERATURE
+            if [ "$VALEUR" != "" ] && [ "$VALEUR" != "null" ]; then
+                # Vérification si le type de capteur est actif pour cette salle
+                if echo "$CAPTEURS_SALLE" | grep -qxF "$TYPE_DEMANDE"; then
+                    
+                    # CORRIGÉ : Requête SQL sans la colonne 'unite'
+                    $MYSQL_BIN -u$DB_USER $DB_NAME -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES ('$DATE_ACTUELLE', '$HEURE_ACTUELLE', $VALEUR, '$ID_CAPTEUR');"
+                    echo "  ✅ [$TYPE_DEMANDE] Valeur $VALEUR insérée pour $ID_CAPTEUR"
+                fi
+            fi
+        }
 
-        VAL_TEMP=$(echo "$DONNEES_JSON" | jq -r '.[0].temperature')
-        if [ "$VAL_TEMP" != "null" ] && [ -n "$VAL_TEMP" ]; then
-            NOM_CAPTEUR="AM107_${SALLE}_Temp"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', '°C', '$SALLE', 'temperature');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_TEMP, '$NOM_CAPTEUR');"
-        fi
+        # Lancement des vérifications pour les 4 capteurs autorisés
+        inserer_si_autorise "temperature" "$TEMP"  "AM107_${SALLE_COURANTE}_Temp"
+        inserer_si_autorise "humidite"    "$HUM"   "AM107_${SALLE_COURANTE}_Hum"
+        inserer_si_autorise "co2"         "$CO2"   "AM107_${SALLE_COURANTE}_CO2"
+        inserer_si_autorise "luminosite"  "$LUM"   "AM107_${SALLE_COURANTE}_Lum"
 
-
-        # 3. PARAMETER 2: PRESSURE
-
-        VAL_PRESS=$(echo "$DONNEES_JSON" | jq -r '.[0].pressure')
-        if [ "$VAL_PRESS" != "null" ] && [ -n "$VAL_PRESS" ]; then
-            NOM_CAPTEUR="AM107_${SALLE}_Press"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'hPa', '$SALLE', 'pression');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_PRESS, '$NOM_CAPTEUR');"
-        fi
-
-
-        # 4. PARAMETER 3: CO2
-
-        VAL_CO2=$(echo "$DONNEES_JSON" | jq -r '.[0].co2')
-        if [ "$VAL_CO2" != "null" ] && [ -n "$VAL_CO2" ]; then
-            NOM_CAPTEUR="AM107_${SALLE}_CO2"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'ppm', '$SALLE', 'co2');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_CO2, '$NOM_CAPTEUR');"
-        fi
-
-
-        # 5. PARAMETER 4: ILLUMINATION
-
-        VAL_LUM=$(echo "$DONNEES_JSON" | jq -r '.[0].illumination')
-        if [ "$VAL_LUM" != "null" ] && [ -n "$VAL_LUM" ]; then
-            NOM_CAPTEUR="AM107_${SALLE}_Lum"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', 'lux', '$SALLE', 'luminosite');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_LUM, '$NOM_CAPTEUR');"
-        fi
-
-
-        # 6. PARAMETER 5: HUMIDITY
-
-        VAL_HUM=$(echo "$DONNEES_JSON" | jq -r '.[0].humidity')
-        if [ "$VAL_HUM" != "null" ] && [ -n "$VAL_HUM" ]; then
-            NOM_CAPTEUR="AM107_${SALLE}_Hum"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT IGNORE INTO capteurs (capteur, unite, salle, capt_type) VALUES ('$NOM_CAPTEUR', '%', '$SALLE', 'humidite');"
-            $MYSQL_BIN -u "$UTILISATEUR_BDD" --password="$MDP_BDD" -D "$NOM_BDD" -e "INSERT INTO mesures (date, horaire, valeur, capteur) VALUES (CURDATE(), CURTIME(), $VAL_HUM, '$NOM_CAPTEUR');"
-        fi
-
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - Données de la salle $SALLE insérées"
     else
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - En attente de données..."
+        echo "  ⏳ Pas de réponse MQTT pour la salle $SALLE_COURANTE (Timeout 5s)"
     fi
-
-    sleep 15
 done
