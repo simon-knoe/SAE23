@@ -1,7 +1,7 @@
-<!-- accessible uniquement par les Gestionnaires.
-Affichage des mesures des capteurs de leur bâtiment uniquement.
-Affichage des moyennes, min et max des salles de leur bâtiment.-->
-<!-- Si utilisaeur non connecté/non role gestion, redirection vers login.php avec paramètre redirect=gestion.php -->
+<!-- Accesible only for managers.
+Displays data from buildings they manage only.
+Displays average, min et max from their buildings' rooms.-->
+<!-- If not connected/no manager role User, redirection to login.php with parameter redirect=gestion.php -->
 <?php
 session_start();
 if (!isset($_SESSION['user_name']) || $_SESSION['user_role'] !== 'gestion') {
@@ -47,6 +47,7 @@ $sql = "SELECT
         ORDER BY c.salle, c.capteur";
 
 $result = mysqli_query($connexion, $sql);
+echo $result
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,4 +103,3 @@ $result = mysqli_query($connexion, $sql);
         </section>
     </body>
 </html>
-
