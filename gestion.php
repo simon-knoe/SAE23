@@ -54,31 +54,6 @@ $result = mysqli_query($connexion, $sql);
         <title>Gestion — IUT de Blagnac</title>
         <meta charset="utf-8">
         <link rel="stylesheet" href="styles/styles.css">
-        <style>
-            .dashboard {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
-                margin-top: 20px;
-            }
-            .bloc-capteur {
-                border: 2px solid #333;
-                padding: 15px;
-                width: 240px;
-                text-align: center;
-                background-color: #fafafa;
-            }
-            .valeur-grosse {
-                font-size: 32px;
-                font-weight: bold;
-                margin: 15px 0;
-            }
-            .stats-ligne {
-                font-size: 12px;
-                border-top: 1px dashed #333;
-                padding-top: 5px;
-            }
-        </style>
     </head>
     <body>
         <header>
