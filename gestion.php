@@ -123,11 +123,17 @@ echo $result
                                 $avg_val = ($stats['avg_val'] !== null) ? $stats['avg_val'] : "--";
 
                                 // Raw display of sensor information
-                                echo "<p>";
-                                    echo "<strong>" . ucfirst($capteur_row['capt_type']) . "</strong> (" . $id_capteur . ") :<br>";
-                                    echo "Valeur actuelle : " . $val_actuelle . " " . $unite . "<br>";
-                                    echo "Min : " . $min_val . " | Moy : " . $avg_val . " | Max : " . $max_val;
-                                echo "</p>";
+                                echo "<div class='bloc-capteur'>";
+                                    echo "<div>"
+                                        echo "<strong>" . ucfirst($capteur_row['capt_type']) . "</strong> (" . $id_capteur . ") :<br>";
+                                    echo "</div>"
+                                    echo "<div class='valeur-grosse'>"
+                                        echo $val_actuelle . " " . $unite . "<br>";
+                                    echo "</div>"
+                                    echo "<div class='stats-ligne'>"
+                                        echo "Min : " . $min_val . " | Moy : " . $avg_val . " | Max : " . $max_val;
+                                    echo "</div>"
+                                echo "</div>";
                             }
                         } else {
                             echo "<p>Aucun capteur configuré dans cette salle.</p>";
