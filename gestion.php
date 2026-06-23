@@ -124,15 +124,15 @@ echo $result
 
                                 // Raw display of sensor information
                                 echo "<div class='bloc-capteur'>";
-                                    echo "<div>"
+                                    echo "<div>";
                                         echo "<strong>" . ucfirst($capteur_row['capt_type']) . "</strong> (" . $id_capteur . ") :<br>";
-                                    echo "</div>"
-                                    echo "<div class='valeur-grosse'>"
+                                    echo "</div>";
+                                    echo "<div class='valeur-grosse'>";
                                         echo $val_actuelle . " " . $unite . "<br>";
-                                    echo "</div>"
-                                    echo "<div class='stats-ligne'>"
+                                    echo "</div>";
+                                    echo "<div class='stats-ligne'>";
                                         echo "Min : " . $min_val . " | Moy : " . $avg_val . " | Max : " . $max_val;
-                                    echo "</div>"
+                                    echo "</div>";
                                 echo "</div>";
                             }
                         } else {
