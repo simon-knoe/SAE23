@@ -207,7 +207,7 @@ $result_list_capteurs = mysqli_query($connexion, "SELECT capteur, salle FROM cap
 
                     <label for="salle_type">Type de salle :</label>
                     <select id="salle_type" name="salle_type" required>
-                        <option value="Cours">TD</option>
+                        <option value="TD">TD</option>
                         <option value="TP">TP</option>
                         <option value="Amphi">Amphi</option>
                     </select>
