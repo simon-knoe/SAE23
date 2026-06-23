@@ -22,12 +22,12 @@
         <article>
             <h2>GANTT final</h2>
             <p>Le diagramme de Gantt final du projet SAE23 est présenté ci-dessous :</p>
-            <img src="images/gantt_final.png" alt="Diagramme de Gantt final">
+            <img src="gantt_final.png" alt="Diagramme de Gantt final">
         </article>
         <article>
             <h2>Captures d’écran des outils collaboratifs utilisés</h2>
             <p>Pour notre projet, nous avons utilisé plusieurs outils collaboratifs comme Trello, un Drive google et un GitHub collaboratif</p>
-            <img src="images/outils_collaboratifs.png" alt="Outils collaboratifs">
+            <img src="outils_collaboratifs.png" alt="Outils collaboratifs">
         </article>
         <article>
             <h2>Synthèse personnelle de chaque membre sur le travail précis réalisé</h2>
