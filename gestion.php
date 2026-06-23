@@ -5,7 +5,7 @@ Displays average, min et max from their buildings' rooms.-->
 <?php
 session_start();
 
-// Protection de la page : redirection si l'utilisateur n'est pas gestionnaire
+// Page's protection : redirection if user isn't a manager
 if (!isset($_SESSION['user_name']) || $_SESSION['user_role'] !== 'gestion') {
     $current_page = basename($_SERVER['SCRIPT_NAME']); 
     header("Location: login.php?redirect=" . urlencode($current_page));
@@ -81,30 +81,30 @@ echo $result
 
             <div>
                 <?php
-                // REQUÊTE 1 : Récupérer toutes les salles appartenant au bâtiment du gestionnaire
+                // REQUEST 1 : Get all rooms in the manager's building
                 $sql_salles = "SELECT salle FROM salles WHERE id_bat = '" . mysqli_real_escape_string($connexion, $user_building) . "' ORDER BY salle";
                 $result_salles = mysqli_query($connexion, $sql_salles);
 
                 if ($result_salles && mysqli_num_rows($result_salles) > 0) {
                     
-                    // Boucle de chaque salle
+                    // loop of each room
                     while ($salle_row = mysqli_fetch_assoc($result_salles)) {
                         $salle_actuelle = $salle_row['salle'];
                         
                         echo "<h3>Salle : " . htmlspecialchars($salle_actuelle) . "</h3>";
 
-                        // REQUÊTE 2 : Pour la salle en cours, récupérer tous ses capteurs rattachés
+                        // REQUEST 2 : For the current room, get all the sensors linked
                         $sql_capteurs = "SELECT capteur, capt_type, unite FROM capteurs WHERE salle = '" . mysqli_real_escape_string($connexion, $salle_actuelle) . "' ORDER BY capt_type";
                         $result_capteurs = mysqli_query($connexion, $sql_capteurs);
 
                         if ($result_capteurs && mysqli_num_rows($result_capteurs) > 0) {
                             
-                            // Boucle de chaque capteur de la salle
+                            // loop of each sensor of the room
                             while ($capteur_row = mysqli_fetch_assoc($result_capteurs)) {
                                 $id_capteur = $capteur_row['capteur'];
                                 $unite = $capteur_row['unite'];
 
-                                // REQUÊTE 3 : Calculer MIN, MAX, AVG et récupérer la dernière valeur pour ce capteur
+                                // REQUEST 3 : Compute MIN, MAX, AVG and get the last value for this sensor
                                 $sql_stats = "SELECT 
                                                 MIN(valeur) AS min_val, 
                                                 MAX(valeur) AS max_val, 
@@ -116,13 +116,13 @@ echo $result
                                 $result_stats = mysqli_query($connexion, $sql_stats);
                                 $stats = mysqli_fetch_assoc($result_stats);
 
-                                // Valeurs par défaut si aucune mesure n'existe
+                                // Default value if no measures exist
                                 $val_actuelle = ($stats['valeur_actuelle'] !== null) ? $stats['valeur_actuelle'] : "--";
                                 $min_val = ($stats['min_val'] !== null) ? $stats['min_val'] : "--";
                                 $max_val = ($stats['max_val'] !== null) ? $stats['max_val'] : "--";
                                 $avg_val = ($stats['avg_val'] !== null) ? $stats['avg_val'] : "--";
 
-                                // Affichage brut des informations du capteur
+                                // Raw display of sensor information
                                 echo "<p>";
                                     echo "<strong>" . htmlspecialchars(ucfirst($capteur_row['capt_type'])) . "</strong> (" . htmlspecialchars($id_capteur) . ") :<br>";
                                     echo "Valeur actuelle : " . htmlspecialchars($val_actuelle) . " " . htmlspecialchars($unite) . "<br>";

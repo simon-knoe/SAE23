@@ -125,6 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_delete_capteur
 $result_list_bat = mysqli_query($connexion, "SELECT id_bat, nom FROM batiments ORDER BY id_bat");
 $result_list_salles = mysqli_query($connexion, "SELECT salle, id_bat FROM salles ORDER BY id_bat");
 $result_list_capteurs = mysqli_query($connexion, "SELECT capteur, salle FROM capteurs ORDER BY capteur");
+//HTML Page begins
 ?>
 <!DOCTYPE html>
 <html>

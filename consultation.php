@@ -1,9 +1,9 @@
-<!-- accessible à tous qui affiche la dernière mesure de toutes les salles. -->
+<!-- accessible to everyone, displays the last measure of all rooms. -->
 <?php
-// Connexion à la base de données de ton LAMPP
+// Connection to the data base of our LAMPP
 require_once("db.php");
 
-// Requête SQL optimisée pour récupérer la TOUTE DERNIÈRE mesure de chaque capteur avec ses infos
+// SQL REQUEST optimised to get the very last measure of each sensor with its personal data
 $sql = "SELECT m.capteur, m.date, m.horaire, m.valeur, c.salle, c.capt_type, c.unite 
         FROM mesures m
         INNER JOIN (
@@ -54,14 +54,14 @@ $result = mysqli_query($connexion, $sql);
                     </thead>
                     <tbody>
                         <?php
-                        // Vérification et boucle d'affichage des lignes de données
+                        // Vérification and loop display of data raws
                         if ($result && mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 // Formatage de la date en version française (JJ/MM/AAAA)
                                 $date_fr = date("d/m/Y", strtotime($row['date']));
                                 $heure_fr = $row['horaire'];
                                 
-                                // Gestion des valeurs par défaut si le capteur n'est pas encore lié proprement
+                                // management of default values if the sensor is not properly linked yet 
                                 $salle = !empty($row['salle']) ? $row['salle'] : "Inconnue";
                                 $type = !empty($row['capt_type']) ? ucfirst($row['capt_type']) : "Inconnu";
                                 $unite = !empty($row['unite']) ? $row['unite'] : "";
