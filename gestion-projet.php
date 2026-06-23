@@ -27,7 +27,7 @@
         <article>
             <h2>Captures d’écran des outils collaboratifs utilisés</h2>
             <p>Pour notre projet, nous avons utilisé plusieurs outils collaboratifs comme Trello, un Drive google et un GitHub collaboratif</p>
-            <img src="outils_collaboratifs.png" alt="Outils collaboratifs">
+            <img src="trello.png" alt="Outils collaboratifs">
         </article>
         <article>
             <h2>Synthèse personnelle de chaque membre sur le travail précis réalisé</h2>
