@@ -75,8 +75,8 @@ echo $result
 
         <section>
             <article>
-                <h2>Bienvenue <?php echo htmlspecialchars($user_name); ?> sur votre page de gestion</h2>
-                <p>Vous pouvez consulter les mesures des capteurs du bâtiment <?php echo htmlspecialchars($user_building); ?></p>
+                <h2>Bienvenue <?php echo $user_name; ?> sur votre page de gestion</h2>
+                <p>Vous pouvez consulter les mesures des capteurs du bâtiment <?php echo $user_building; ?></p>
             </article>
 
             <div>
@@ -91,7 +91,7 @@ echo $result
                     while ($salle_row = mysqli_fetch_assoc($result_salles)) {
                         $salle_actuelle = $salle_row['salle'];
                         
-                        echo "<h3>Salle : " . htmlspecialchars($salle_actuelle) . "</h3>";
+                        echo "<h3>Salle : " . $salle_actuelle . "</h3>";
 
                         // REQUEST 2 : For the current room, get all the sensors linked
                         $sql_capteurs = "SELECT capteur, capt_type, unite FROM capteurs WHERE salle = '" . mysqli_real_escape_string($connexion, $salle_actuelle) . "' ORDER BY capt_type";
@@ -124,9 +124,9 @@ echo $result
 
                                 // Raw display of sensor information
                                 echo "<p>";
-                                    echo "<strong>" . htmlspecialchars(ucfirst($capteur_row['capt_type'])) . "</strong> (" . htmlspecialchars($id_capteur) . ") :<br>";
-                                    echo "Valeur actuelle : " . htmlspecialchars($val_actuelle) . " " . htmlspecialchars($unite) . "<br>";
-                                    echo "Min : " . htmlspecialchars($min_val) . " | Moy : " . htmlspecialchars($avg_val) . " | Max : " . htmlspecialchars($max_val);
+                                    echo "<strong>" . ucfirst($capteur_row['capt_type']) . "</strong> (" . $id_capteur . ") :<br>";
+                                    echo "Valeur actuelle : " . $val_actuelle . " " .$unite) . "<br>";
+                                    echo "Min : " . $min_val . " | Moy : " . $avg_val . " | Max : " . $max_val;
                                 echo "</p>";
                             }
                         } else {

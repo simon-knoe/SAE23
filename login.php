@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         
         <form action="login.php" method="POST">
-            <input type="hidden" name="redirect_to" value="<?php echo $redirect_to; ?>"> <!-- Pour garder la variable quand on rafraichi la page -->
+            <input type="hidden" name="redirect_to" value="<?php echo $redirect_to; ?>"> <!-- to keep the variable when the page is refreshed -->
             <p>
                 <label>Utilisateur :</label><br>
                 <input type="text" name="username" required>

@@ -1,4 +1,4 @@
-<!-- description de l’objectif du site, affichage des bâtiments gérés, des salles équipées, mentions légales. -->
+<!-- description of the site's goals, display managed buildings, equiped rooms, legal mentions. -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,12 +19,12 @@
         </nav>
     </header>
     <body>
-        <article><!-- description de l’objectif du site -->
+        <article><!-- description of the site's goals -->
             <h2>Bienvenue sur le site de supervision IoT de l'IUT de Blagnac</h2>
             <p>Ce site a pour objectif de superviser les bâtiments et les salles équipées de l'IUT de Blagnac. Vous pouvez consulter les données des capteurs, gérer les équipements et administrer le système.</p>
             <p>Si vous n'avez pas de compte gestion ou administrateur vous pouvez consulter les dernières données récupérées des capteurs en vous rendant sur la <a href="consultation.php">page de consultation</a>. Pour accéder aux fonctionnalités de gestion et d'administration rendez vous sur les pages correspondantes et connectez-vous.</p>
         </article>
-        <article><!-- bâtiments et salles équipées -->
+        <article><!-- buildings and equiped rooms -->
             <h2>Les bâtiments et les salles équipées</h2>
             <?php
             require_once("db.php");
@@ -69,7 +69,7 @@
             }
             ?>
         </article>
-        <article><!-- mentions légales -->
+        <article><!-- legal mentions -->
             <h2>Mentions légales</h2>
         </article>
     </body>
