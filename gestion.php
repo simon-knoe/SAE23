@@ -125,7 +125,7 @@ echo $result
                                 // Raw display of sensor information
                                 echo "<p>";
                                     echo "<strong>" . ucfirst($capteur_row['capt_type']) . "</strong> (" . $id_capteur . ") :<br>";
-                                    echo "Valeur actuelle : " . $val_actuelle . " " .$unite) . "<br>";
+                                    echo "Valeur actuelle : " . $val_actuelle . " " . $unite . "<br>";
                                     echo "Min : " . $min_val . " | Moy : " . $avg_val . " | Max : " . $max_val;
                                 echo "</p>";
                             }
