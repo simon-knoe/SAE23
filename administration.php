@@ -59,9 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['action_create_capteur
     $capt_type = trim($_POST['capt_type']); 
 
     $unite = "°C"; 
-    if ($capt_type == "Humidite") $unite = "%";
-    if ($capt_type == "CO2") $unite = "ppm";
-    if ($capt_type == "Luminosite") $unite = "lux";
+    if ($capt_type == "humidite") $unite = "%";
+    if ($capt_type == "co2") $unite = "ppm";
+    if ($capt_type == "luminosite") $unite = "lux";
 
     if (empty($salle) || empty($capt_type)) {
         $msg_capteur = "<p>Tous les champs sont obligatoires.</p>";
