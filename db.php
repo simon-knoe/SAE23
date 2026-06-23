@@ -1,3 +1,4 @@
+<!--Connection information to the DATA BASE-->
 <?php
 $host = "localhost";
 $user = "sae23";

@@ -1,4 +1,4 @@
-<!-- GANTT final, captures d’écran outils collaboratifs utilisés, synthèse personnelle de chaque membre sur travail précis réalisé, problèmes rencontrés, solutions proposées, et une conclusion sur degré de satisfaction du cahier des charges -->
+<!-- final GANTT , collaborative tools screen shots,personnal synthesis of each member on his precise work, issues and proposed solutions, and a conclusion on satisfaction level of the technical specifications -->
 <!DOCTYPE html>
 <html>
     <head>
